@@ -58,6 +58,8 @@
   
   - Option to override the entity's serialization behavior using `toXML` and `fromXML` methods.
 
+- Logic system should be completely detached from world system. This way, users can use Scaffold to create logic for vanilla worlds.
+
 ## Projects
 
 - With the addition of custom dimensions, it may be possible to distribute multiple levels in one world.
