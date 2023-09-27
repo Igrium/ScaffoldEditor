@@ -51,4 +51,31 @@ public class ScaffoldWorld {
     public final BlockState blockAt(Vector3ic pos) {
         return blockAt(pos.x(), pos.y(), pos.z());
     }
+
+    @Nullable
+    public BlockState setBlock(int x, int y, int z, BlockState block) {
+        int chunkX = ChunkSectionPos.getSectionCoord(x);
+        int chunkY = ChunkSectionPos.getSectionCoord(y);
+        int chunkZ = ChunkSectionPos.getSectionCoord(z);
+
+        Vector3i chunkPos = new Vector3i(chunkX, chunkY, chunkZ);
+
+        ScaffoldChunk chunk = chunks.get(chunkPos);
+        if (chunk == null) {
+            if (block == null) return null;
+            chunk = new ScaffoldChunk();
+            chunks.put(chunkPos, chunk);
+        }
+
+        int localX = x & 0xF;
+        int localY = y & 0xF;
+        int localZ = z & 0xF;
+
+        return chunk.setBlock(localX, localY, localZ, block);
+    }
+    
+    @Nullable
+    public final BlockState setBlock(Vector3ic pos, BlockState block) {
+        return setBlock(pos.x(), pos.y(), pos.z(), block);
+    }
 }
