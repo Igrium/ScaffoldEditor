@@ -1,41 +1,41 @@
 {
-	"schemaVersion": 1,
-	"id": "scaffold-editor",
-	"version": "${version}",
-	"name": "Scaffold Editor",
-	"description": "This is an example description! Tell everyone what your mod is about!",
-	"authors": [
-		"Me!"
-	],
-	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
-	},
-	"license": "CC0-1.0",
-	"icon": "assets/scaffold-editor/icon.png",
-	"environment": "*",
-	"entrypoints": {
-		"main": [
-			"com.igrium.scaffold.ExampleMod"
-		],
-		"client": [
-			"com.igrium.scaffold.ExampleModClient"
-		]
-	},
-	"mixins": [
-		"scaffold-editor.mixins.json",
-		{
-			"config": "scaffold-editor.client.mixins.json",
-			"environment": "client"
-		}
-	],
-	"depends": {
-		"fabricloader": ">=0.14.22",
-		"minecraft": "~1.20.2",
-		"java": ">=17",
-		"fabric-api": "*"
-	},
-	"suggests": {
-		"another-mod": "*"
-	}
+    "schemaVersion": 1,
+    "id": "scaffold-editor",
+    "version": "${version}",
+    "name": "Scaffold Editor",
+    "description": "This is an example description! Tell everyone what your mod is about!",
+    "authors": [
+        "Me!"
+    ],
+    "contact": {
+        "homepage": "https://fabricmc.net/",
+        "sources": "https://github.com/FabricMC/fabric-example-mod"
+    },
+    "license": "CC0-1.0",
+    "icon": "assets/scaffold-editor/icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "com.igrium.scaffold.ScaffoldEditorMod"
+        ],
+        "client": [
+            "com.igrium.scaffold.ScaffoldEditorClient"
+        ]
+    },
+    "mixins": [
+        "scaffold-editor.mixins.json",
+        {
+            "config": "scaffold-editor.client.mixins.json",
+            "environment": "client"
+        }
+    ],
+    "depends": {
+        "fabricloader": ">=0.14.22",
+        "minecraft": "~1.20.2",
+        "java": ">=17",
+        "fabric-api": "*"
+    },
+    "suggests": {
+        "another-mod": "*"
+    }
 }

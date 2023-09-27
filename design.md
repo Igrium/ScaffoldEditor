@@ -28,6 +28,10 @@
   
   - It might be harder to strip all functionality from vanilla server instance than to re-implement it.
 
+- I wrote a subclass of `WorldChunk` which, much like a debug world, operates by force-returning certain blockstates rather than using its internal memory. I'll have to mix into `ServerChunkManager` to force it to return these chunks, because the field is final in `ServerWorld` and I'd rather not fuck with that.
+  
+  - Edit: fuck it, I'll subclass because I'm overriding a lot of functionality.
+
 ## Levels
 
 - Scaffold entities should be renamed to avoid confusion with Minecraft entities. Possibilities include:
