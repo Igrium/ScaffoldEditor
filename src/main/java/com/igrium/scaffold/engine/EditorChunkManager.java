@@ -26,6 +26,7 @@ import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.ChunkStatusChangeListener;
+import net.minecraft.world.chunk.EmptyChunk;
 import net.minecraft.world.chunk.WorldChunk;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.level.storage.LevelStorage.Session;
@@ -37,7 +38,7 @@ public class EditorChunkManager extends ServerChunkManager {
      */
     public static Optional<ScaffoldWorld> LAUNCHING_WORLD = Optional.empty();
 
-    protected Map<ChunkPos, EditorChunk> editorChunks = new HashMap<>();
+    protected Map<ChunkPos, WorldChunk> editorChunks = new HashMap<>();
     private final ScaffoldWorld scaffoldWorld;
 
     public EditorChunkManager(ServerWorld world, Session session, DataFixer dataFixer,
@@ -61,9 +62,10 @@ public class EditorChunkManager extends ServerChunkManager {
     @Nullable
     public WorldChunk getChunk(int x, int z, ChunkStatus leastStatus, boolean create) {
         ChunkPos pos = new ChunkPos(x, z);
-        EditorChunk chunk = editorChunks.get(pos);
+        WorldChunk chunk = editorChunks.get(pos);
         if (chunk == null) {
             chunk = new EditorChunk(getWorld(), pos, scaffoldWorld, getWorld().getRegistryManager().get(RegistryKeys.BIOME).entryOf(BiomeKeys.PLAINS));
+            // chunk = new EmptyChunk(getWorld(), pos, getWorld().getRegistryManager().get(RegistryKeys.BIOME).entryOf(BiomeKeys.PLAINS));
             editorChunks.put(pos, chunk);
         }
         return chunk;

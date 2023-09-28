@@ -32,7 +32,7 @@ public class LevelEditor {
         return instance;
     }
 
-    public static final LevelInfo EDITOR_LEVEL_INFO = new LevelInfo("Demo World", GameMode.SPECTATOR, false, Difficulty.NORMAL, false, new GameRules(), DataConfiguration.SAFE_MODE);
+    public static final LevelInfo EDITOR_LEVEL_INFO = new LevelInfo("Demo World", GameMode.SPECTATOR, false, Difficulty.NORMAL, true, new GameRules(), DataConfiguration.SAFE_MODE);
 
     protected MinecraftClient client;
     protected ScaffoldWorld world;
@@ -59,7 +59,7 @@ public class LevelEditor {
 
         world = new ScaffoldWorld();
         EditorChunkManager.LAUNCHING_WORLD = Optional.of(world);
-        client.createIntegratedServerLoader().createAndStart("scaffold.editor", MinecraftServer.DEMO_LEVEL_INFO, GeneratorOptions.DEMO_OPTIONS, WorldPresets::createDemoOptions);
+        client.createIntegratedServerLoader().createAndStart("scaffold.editor", EDITOR_LEVEL_INFO, GeneratorOptions.DEMO_OPTIONS, WorldPresets::createDemoOptions);
 
         world.setBlock(0, 0, 0, Blocks.STONE.getDefaultState());
     }

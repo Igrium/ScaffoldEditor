@@ -1,5 +1,6 @@
 package com.igrium.scaffold.level;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,13 +23,27 @@ public class ScaffoldWorld {
     protected Map<Vector3i, ScaffoldChunk> chunks = new HashMap<>();
 
     @Nullable
-    public ScaffoldChunk chunkAt(int x, int y, int z) {
+    public ScaffoldChunk getChunk(int x, int y, int z) {
         return chunks.get(new Vector3i(x, y, z));
     }
 
     @Nullable
-    public final ScaffoldChunk chunkAt(Vector3ic pos) {
-        return chunkAt(pos.x(), pos.y(), pos.z());
+    public final ScaffoldChunk getChunk(Vector3ic pos) {
+        return getChunk(pos.x(), pos.y(), pos.z());
+    }
+    
+    public ScaffoldChunk getChunkOrCreate(int x, int y, int z) {
+        Vector3i vec = new Vector3i(x, y, z);
+        ScaffoldChunk chunk = chunks.get(vec);
+        if (chunk == null) {
+            chunk = new ScaffoldChunk();
+            chunks.put(vec, chunk);
+        }
+        return chunk;
+    }
+
+    public Map<Vector3ic, ScaffoldChunk> chunks() {
+        return Collections.unmodifiableMap(chunks);
     }
 
     @Nullable
@@ -37,14 +52,14 @@ public class ScaffoldWorld {
         int chunkY = ChunkSectionPos.getSectionCoord(y);
         int chunkZ = ChunkSectionPos.getSectionCoord(z);
 
-        ScaffoldChunk chunk = chunkAt(chunkX, chunkY, chunkZ);
+        ScaffoldChunk chunk = getChunk(chunkX, chunkY, chunkZ);
         if (chunk == null) return null;
 
         int localX = x & 0xF;
         int localY = y & 0xF;
         int localZ = z & 0xF;
 
-        return chunk.blockAt(localX, localY, localZ);
+        return chunk.getBlockState(localX, localY, localZ);
     }
 
     @Nullable
@@ -71,7 +86,7 @@ public class ScaffoldWorld {
         int localY = y & 0xF;
         int localZ = z & 0xF;
 
-        return chunk.setBlock(localX, localY, localZ, block);
+        return chunk.setBlockState(localX, localY, localZ, block);
     }
     
     @Nullable

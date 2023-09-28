@@ -1,49 +1,82 @@
 package com.igrium.scaffold.level;
 
-import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3ic;
+import java.util.function.Predicate;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.world.chunk.PalettedContainer;
 
 /**
  * A 16x16x16 collection of blocks.
  */
 public class ScaffoldChunk {
-    // Because Java stores by reference, we can directly store blockstates.
-    private final BlockState[][][] blocks = new BlockState[16][16][16];
+    private final PalettedContainer<BlockState> blockStateContainer;
 
-    /**
-     * Get the block at a given position.
-     * @param x Local X.
-     * @param y Local Y.
-     * @param z Local Z.
-     * @return The block. Null if there is none.
-     */
-    @Nullable
-    public BlockState blockAt(int x, int y, int z) throws IndexOutOfBoundsException {
-        return blocks[x][y][z];
+    public PalettedContainer<BlockState> getBlockStateContainer() {
+        return blockStateContainer;
     }
 
-    /**
-     * Get the block at as given position.
-     * @param pos Local position.
-     * @return The block. Null if there is none.
-     */
-    public BlockState blockAt(Vector3ic pos) throws IndexOutOfBoundsException {
-        return blockAt(pos.x(), pos.y(), pos.z());
+    private short nonEmptyBlockCount;
+
+    public short getNonEmptyBlockCount() {
+        return nonEmptyBlockCount;
     }
 
-    /**
-     * Set the block at a given position.
-     * @param x Local X
-     * @param y Local Y
-     * @param z Local Z
-     * @param block The block to set.
-     * @return The old block.
-     */
-    public BlockState setBlock(int x, int y, int z, BlockState block) {
-        BlockState old = blocks[x][y][z];
-        blocks[x][y][z] = block;
-        return old;
+    public ScaffoldChunk() {
+        this.blockStateContainer = new PalettedContainer<BlockState>(Block.STATE_IDS, Blocks.AIR.getDefaultState(),
+                PalettedContainer.PaletteProvider.BLOCK_STATE);
+    }
+
+    public BlockState getBlockState(int x, int y, int z) {
+        return this.blockStateContainer.get(x, y, z);
+    }
+
+    public FluidState getFluidState(int x, int y, int z) {
+        return this.blockStateContainer.get(x, y, z).getFluidState();
+    }
+
+    public void lock() {
+        this.blockStateContainer.lock();
+    }
+
+    public void unlock() {
+        this.blockStateContainer.unlock();
+    }
+
+    public BlockState setBlockState(int x, int y, int z, BlockState state) {
+        return this.setBlockState(x, y, z, state, true);
+    }
+
+    public BlockState setBlockState(int x, int y, int z, BlockState state, boolean lock) {
+        if (state == null) {
+            state = Blocks.AIR.getDefaultState();
+        }
+
+        BlockState oldState = lock ? this.blockStateContainer.swap(x, y, z, state)
+                : this.blockStateContainer.swapUnsafe(x, y, z, state);
+        
+        if (state.getBlock() != Blocks.AIR && oldState.getBlock() == Blocks.AIR) {
+            nonEmptyBlockCount++;
+        } else if (state.getBlock() == Blocks.AIR && oldState.getBlock() != Blocks.AIR) {
+            nonEmptyBlockCount--;
+        }
+
+        return oldState;
+    }
+
+    public int getPacketSize() {
+        return 2 + this.blockStateContainer.getPacketSize();
+    }
+
+    public boolean hasAny(Predicate<BlockState> predicate) {
+        return this.blockStateContainer.hasAny(predicate);
+    }
+
+    public void toPacket(PacketByteBuf buf) {
+        buf.writeShort(nonEmptyBlockCount);
+        this.blockStateContainer.writePacket(buf);
     }
 }
