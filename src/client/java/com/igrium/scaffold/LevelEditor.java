@@ -1,17 +1,14 @@
 package com.igrium.scaffold;
 
-import java.util.Optional;
-
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
-import com.igrium.scaffold.engine.EditorChunkManager;
+// import com.igrium.scaffold.engine.EditorChunkManager;
 import com.igrium.scaffold.level.ScaffoldWorld;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.DataConfiguration;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameMode;
@@ -58,7 +55,7 @@ public class LevelEditor {
         instance = this;
 
         world = new ScaffoldWorld();
-        EditorChunkManager.LAUNCHING_WORLD = Optional.of(world);
+        // EditorChunkManager.LAUNCHING_WORLD = Optional.of(world);
         client.createIntegratedServerLoader().createAndStart("scaffold.editor", EDITOR_LEVEL_INFO, GeneratorOptions.DEMO_OPTIONS, WorldPresets::createDemoOptions);
 
         world.setBlock(0, 0, 0, Blocks.STONE.getDefaultState());
