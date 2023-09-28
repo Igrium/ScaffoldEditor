@@ -3,7 +3,8 @@
     "package": "com.igrium.scaffold.mixin",
     "compatibilityLevel": "JAVA_17",
     "mixins": [
-        "ServerWorldMixin"
+        "ServerWorldMixin",
+        "ChunkDataSenderMixin"
     ],
     "injectors": {
         "defaultRequire": 1

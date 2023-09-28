@@ -1,5 +1,6 @@
 package com.igrium.scaffold.engine;
 
+import com.igrium.scaffold.level.ScaffoldChunk;
 import com.igrium.scaffold.level.ScaffoldWorld;
 
 import net.minecraft.network.PacketByteBuf;
@@ -16,6 +17,7 @@ import net.minecraft.world.chunk.ChunkSection;
 public class EditorChunkSection extends ChunkSection {
 
     private ChunkSectionPos pos;
+    private ScaffoldChunk scaffoldChunk;
     
     public ChunkSectionPos getPos() {
         return pos;
@@ -31,10 +33,16 @@ public class EditorChunkSection extends ChunkSection {
         super(biomeRegistry);
         this.pos = pos;
         this.world = world;
+        scaffoldChunk = world.getChunkOrCreate(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    public int getPacketSize() {
+        return scaffoldChunk.getPacketSize() + this.getBiomeContainer().getPacketSize();
     }
 
     // This is all we really need for networking. Everything else is handled by the chunk.
     public void toPacket(PacketByteBuf buf) {
-        world.getChunkOrCreate(pos.getX(), pos.getY(), pos.getZ()).toPacket(buf);
+        scaffoldChunk.toPacket(buf);
+        this.getBiomeContainer().writePacket(buf);
     }
 }

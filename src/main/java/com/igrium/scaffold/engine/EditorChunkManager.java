@@ -26,7 +26,6 @@ import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.ChunkStatusChangeListener;
-import net.minecraft.world.chunk.EmptyChunk;
 import net.minecraft.world.chunk.WorldChunk;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.level.storage.LevelStorage.Session;
