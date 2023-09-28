@@ -37,6 +37,12 @@ public class LevelEditor {
     protected ScaffoldWorld world;
     protected IntegratedServer server;
 
+    private boolean isRunning;
+    
+    public final boolean isRunning() {
+        return isRunning;
+    }
+
     public ScaffoldWorld getWorld() {
         return world;
     }
@@ -59,8 +65,15 @@ public class LevelEditor {
         world = new ScaffoldWorld();
         EditorChunkManager.LAUNCHING_WORLD = Optional.of(world);
         client.createIntegratedServerLoader().createAndStart("scaffold.editor", EDITOR_LEVEL_INFO, GeneratorOptions.DEMO_OPTIONS, WorldPresets::createDemoOptions);
+        isRunning = true;
 
         world.setBlock(0, 0, 0, Blocks.STONE.getDefaultState());
         world.setBlock(0, 128, 0, Blocks.GRASS_BLOCK.getDefaultState());
+    }
+
+    public void onShutdown() {
+        EditorChunkManager.LAUNCHING_WORLD = Optional.empty();
+        instance = null;
+        isRunning = false;
     }
 }

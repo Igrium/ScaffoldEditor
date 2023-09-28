@@ -65,6 +65,7 @@ public class ServerWorldMixin implements IServerWorldMixin {
                     server.getStructureTemplateManager(), workerExecutor, dimensionOptions.chunkGenerator(),
                     server.getPlayerManager().getViewDistance(), server.getPlayerManager().getSimulationDistance(),
                     server.syncChunkWrites(), worldGenerationProgressListener, entityManager::updateTrackingStatus, () -> server.getOverworld().getPersistentStateManager(), scaffoldWorld);
+        EditorChunkManager.LAUNCHING_WORLD = Optional.empty();
         }
     }
 }
