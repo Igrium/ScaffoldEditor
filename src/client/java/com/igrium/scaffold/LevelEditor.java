@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
 import com.igrium.scaffold.engine.EditorChunkManager;
 import com.igrium.scaffold.level.ScaffoldWorld;
+import com.mojang.logging.LogUtils;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -83,17 +85,18 @@ public class LevelEditor {
         
         for (int x = 0; x < 64; x++) {
             for (int z = 0; z < 64; z++) {
-                futures.add(placeBlockAsync(x, 64, z, Blocks.OAK_PLANKS.getDefaultState()));
+                futures.add(placeBlockAsync(x, 128, z, Blocks.OAK_PLANKS.getDefaultState(), 10000));
             }
         }
 
         return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
     }
 
-    private CompletableFuture<Void> placeBlockAsync(int x, int y, int z, BlockState block) {
+    private CompletableFuture<Void> placeBlockAsync(int x, int y, int z, BlockState block, long delay) {
         return CompletableFuture.runAsync(() -> {
-            world.setBlock(x, 7, z, Blocks.OAK_PLANKS.getDefaultState());
-        }, Util.getMainWorkerExecutor());
+            world.setBlock(x, y, z, Blocks.OAK_PLANKS.getDefaultState());
+            LogUtils.getLogger().info("Placed block at [{}, {}, {}]", x, y, z);
+        }, CompletableFuture.delayedExecutor(delay, TimeUnit.MILLISECONDS, Util.getMainWorkerExecutor()));
     }
 
     public void onShutdown() {

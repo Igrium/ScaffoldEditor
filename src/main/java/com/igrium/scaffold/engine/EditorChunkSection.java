@@ -3,6 +3,8 @@ package com.igrium.scaffold.engine;
 import com.igrium.scaffold.level.ScaffoldChunk;
 import com.igrium.scaffold.level.ScaffoldWorld;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.math.ChunkSectionPos;
@@ -34,6 +36,16 @@ public class EditorChunkSection extends ChunkSection {
         this.pos = pos;
         this.world = world;
         scaffoldChunk = world.getChunkOrCreate(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    @Override
+    public BlockState getBlockState(int x, int y, int z) {
+        return scaffoldChunk.getBlockState(x, y, z);
+    }
+
+    @Override
+    public FluidState getFluidState(int x, int y, int z) {
+        return scaffoldChunk.getFluidState(x, y, z);
     }
 
     public int getPacketSize() {
