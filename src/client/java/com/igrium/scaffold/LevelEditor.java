@@ -1,6 +1,9 @@
 package com.igrium.scaffold;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
@@ -8,10 +11,12 @@ import org.jetbrains.annotations.Nullable;
 import com.igrium.scaffold.engine.EditorChunkManager;
 import com.igrium.scaffold.level.ScaffoldWorld;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.DataConfiguration;
 import net.minecraft.server.integrated.IntegratedServer;
+import net.minecraft.util.Util;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.GameRules;
@@ -67,8 +72,28 @@ public class LevelEditor {
         client.createIntegratedServerLoader().createAndStart("scaffold.editor", EDITOR_LEVEL_INFO, GeneratorOptions.DEMO_OPTIONS, WorldPresets::createDemoOptions);
         isRunning = true;
 
-        world.setBlock(0, 0, 0, Blocks.STONE.getDefaultState());
-        world.setBlock(0, 128, 0, Blocks.GRASS_BLOCK.getDefaultState());
+        world.setUpdateExecutor(client.getServer());
+        placeTestBlocks();
+        // world.setBlock(0, 0, 0, Blocks.STONE.getDefaultState());
+        // world.setBlock(0, 128, 0, Blocks.GRASS_BLOCK.getDefaultState());
+    }
+
+    public CompletableFuture<Void> placeTestBlocks() {
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+        
+        for (int x = 0; x < 64; x++) {
+            for (int z = 0; z < 64; z++) {
+                futures.add(placeBlockAsync(x, 64, z, Blocks.OAK_PLANKS.getDefaultState()));
+            }
+        }
+
+        return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
+    }
+
+    private CompletableFuture<Void> placeBlockAsync(int x, int y, int z, BlockState block) {
+        return CompletableFuture.runAsync(() -> {
+            world.setBlock(x, 7, z, Blocks.OAK_PLANKS.getDefaultState());
+        }, Util.getMainWorkerExecutor());
     }
 
     public void onShutdown() {

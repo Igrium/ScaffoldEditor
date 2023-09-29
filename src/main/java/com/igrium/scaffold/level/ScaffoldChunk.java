@@ -55,8 +55,11 @@ public class ScaffoldChunk {
             state = Blocks.AIR.getDefaultState();
         }
 
-        BlockState oldState = lock ? this.blockStateContainer.swap(x, y, z, state)
-                : this.blockStateContainer.swapUnsafe(x, y, z, state);
+        BlockState oldState;
+        synchronized (this) {
+            oldState = lock ? this.blockStateContainer.swap(x, y, z, state)
+                    : this.blockStateContainer.swapUnsafe(x, y, z, state);
+        }
         
         if (state.getBlock() != Blocks.AIR && oldState.getBlock() == Blocks.AIR) {
             nonEmptyBlockCount++;

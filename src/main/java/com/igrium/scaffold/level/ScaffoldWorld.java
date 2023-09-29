@@ -1,8 +1,9 @@
 package com.igrium.scaffold.level;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,7 +23,24 @@ import net.minecraft.util.math.ChunkSectionPos;
  */
 public class ScaffoldWorld {
     @NotNull
-    protected Map<Vector3i, ScaffoldChunk> chunks = new HashMap<>();
+    protected Map<Vector3i, ScaffoldChunk> chunks = new ConcurrentHashMap<>();
+
+    private Executor updateExecutor = Runnable::run;
+
+    /**
+     * Because ScaffoldWorld is thread safe, calls to
+     * {@link ScaffoldWorldEvents#WORLD_MODIFIED} will be executed here.
+     */
+    public void setUpdateExecutor(@Nullable Executor updateExecutor) {
+        if (updateExecutor == null)
+            this.updateExecutor = Runnable::run;
+        else
+            this.updateExecutor = updateExecutor;
+    }
+
+    public Executor getUpdateExecutor() {
+        return updateExecutor;
+    }
 
     @Nullable
     public ScaffoldChunk getChunk(int x, int y, int z) {
@@ -77,20 +95,15 @@ public class ScaffoldWorld {
         int chunkZ = ChunkSectionPos.getSectionCoord(z);
 
         Vector3i chunkPos = new Vector3i(chunkX, chunkY, chunkZ);
-
-        ScaffoldChunk chunk = chunks.get(chunkPos);
-        if (chunk == null) {
-            if (block == null) return null;
-            chunk = new ScaffoldChunk();
-            chunks.put(chunkPos, chunk);
-        }
-
+        ScaffoldChunk chunk = chunks.computeIfAbsent(chunkPos, pos -> new ScaffoldChunk());
+        
         int localX = x & 0xF;
         int localY = y & 0xF;
         int localZ = z & 0xF;
 
         BlockState oldState = chunk.setBlockState(localX, localY, localZ, block);
-        ScaffoldWorldEvents.WORLD_MODIFIED.invoker().onWorldModified(this, new Vector3i(x, y, z), oldState, block);
+        updateExecutor.execute(() -> ScaffoldWorldEvents.WORLD_MODIFIED.invoker().onWorldModified(this,
+                new Vector3i(x, y, z), oldState, block));
 
         return oldState;
     }
