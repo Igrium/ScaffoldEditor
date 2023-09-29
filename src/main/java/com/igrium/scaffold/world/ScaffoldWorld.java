@@ -1,4 +1,4 @@
-package com.igrium.scaffold.level;
+package com.igrium.scaffold.world;
 
 import java.util.Collections;
 import java.util.Map;
@@ -13,6 +13,7 @@ import org.joml.Vector3ic;
 import com.igrium.scaffold.events.ScaffoldWorldEvents;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
 
 /**
@@ -51,6 +52,11 @@ public class ScaffoldWorld {
     public final ScaffoldChunk getChunk(Vector3ic pos) {
         return getChunk(pos.x(), pos.y(), pos.z());
     }
+
+    @Nullable
+    public final ScaffoldChunk getChunk(ChunkSectionPos pos) {
+        return getChunk(pos.getX(), pos.getY(), pos.getZ());
+    }
     
     public ScaffoldChunk getChunkOrCreate(int x, int y, int z) {
         Vector3i vec = new Vector3i(x, y, z);
@@ -88,6 +94,11 @@ public class ScaffoldWorld {
     }
 
     @Nullable
+    public final BlockState blockAt(BlockPos pos) {
+        return blockAt(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    @Nullable
     public BlockState setBlock(int x, int y, int z, BlockState block) {
 
         int chunkX = ChunkSectionPos.getSectionCoord(x);
@@ -111,5 +122,10 @@ public class ScaffoldWorld {
     @Nullable
     public final BlockState setBlock(Vector3ic pos, BlockState block) {
         return setBlock(pos.x(), pos.y(), pos.z(), block);
+    }
+    
+    @Nullable
+    public final BlockState setBlock(BlockPos pos, BlockState block) {
+        return setBlock(pos.getX(), pos.getY(), pos.getZ(), block);
     }
 }

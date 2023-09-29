@@ -10,7 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
 import com.igrium.scaffold.engine.EditorChunkManager;
-import com.igrium.scaffold.level.ScaffoldWorld;
+import com.igrium.scaffold.world.ScaffoldWorld;
 import com.mojang.logging.LogUtils;
 
 import net.minecraft.block.BlockState;

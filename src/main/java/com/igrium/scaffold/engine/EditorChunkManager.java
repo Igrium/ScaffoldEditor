@@ -14,7 +14,7 @@ import org.joml.Vector3ic;
 
 import com.igrium.scaffold.events.ScaffoldWorldEvents;
 import com.igrium.scaffold.events.ScaffoldWorldEvents.WorldModified;
-import com.igrium.scaffold.level.ScaffoldWorld;
+import com.igrium.scaffold.world.ScaffoldWorld;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.util.Either;
 

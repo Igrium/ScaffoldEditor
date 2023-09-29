@@ -1,7 +1,7 @@
 package com.igrium.scaffold.test;
 
 import com.igrium.scaffold.engine.IServerWorldMixin;
-import com.igrium.scaffold.level.ScaffoldWorld;
+import com.igrium.scaffold.world.ScaffoldWorld;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;

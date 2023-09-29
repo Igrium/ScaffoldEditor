@@ -1,4 +1,4 @@
-package com.igrium.scaffold.level;
+package com.igrium.scaffold.world;
 
 import java.util.function.Predicate;
 

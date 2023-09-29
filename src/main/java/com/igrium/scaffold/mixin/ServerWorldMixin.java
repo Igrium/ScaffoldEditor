@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.igrium.scaffold.engine.EditorChunkManager;
 import com.igrium.scaffold.engine.IServerWorldMixin;
-import com.igrium.scaffold.level.ScaffoldWorld;
+import com.igrium.scaffold.world.ScaffoldWorld;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.registry.RegistryKey;

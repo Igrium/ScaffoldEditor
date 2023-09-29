@@ -5,7 +5,7 @@ import java.util.concurrent.Executor;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.igrium.scaffold.level.ScaffoldWorld;
+import com.igrium.scaffold.world.ScaffoldWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;

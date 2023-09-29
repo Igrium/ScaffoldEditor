@@ -3,7 +3,7 @@ package com.igrium.scaffold.events;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3ic;
 
-import com.igrium.scaffold.level.ScaffoldWorld;
+import com.igrium.scaffold.world.ScaffoldWorld;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;

@@ -2,7 +2,7 @@ package com.igrium.scaffold.engine;
 
 import java.util.Optional;
 
-import com.igrium.scaffold.level.ScaffoldWorld;
+import com.igrium.scaffold.world.ScaffoldWorld;
 
 public interface IServerWorldMixin {
     public default boolean isEditorWorld() {

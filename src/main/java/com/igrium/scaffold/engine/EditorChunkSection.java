@@ -1,7 +1,7 @@
 package com.igrium.scaffold.engine;
 
-import com.igrium.scaffold.level.ScaffoldChunk;
-import com.igrium.scaffold.level.ScaffoldWorld;
+import com.igrium.scaffold.world.ScaffoldChunk;
+import com.igrium.scaffold.world.ScaffoldWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.fluid.FluidState;
