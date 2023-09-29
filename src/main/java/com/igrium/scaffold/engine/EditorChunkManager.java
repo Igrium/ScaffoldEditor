@@ -1,18 +1,24 @@
 package com.igrium.scaffold.engine;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3ic;
 
+import com.igrium.scaffold.events.ScaffoldWorldEvents;
+import com.igrium.scaffold.events.ScaffoldWorldEvents.WorldModified;
 import com.igrium.scaffold.level.ScaffoldWorld;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.util.Either;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.WorldGenerationProgressListener;
 import net.minecraft.server.world.ChunkHolder;
@@ -30,15 +36,36 @@ import net.minecraft.world.chunk.WorldChunk;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.level.storage.LevelStorage.Session;
 
-public class EditorChunkManager extends ServerChunkManager {
+public class EditorChunkManager extends ServerChunkManager implements WorldModified {
 
     /**
      * Tells the engine if we're currently in the process of making an editor world. If so, the overworld dimension will be spawned as an editor world.
      */
     public static Optional<ScaffoldWorld> LAUNCHING_WORLD = Optional.empty();
 
+    /**
+     * A slight wrapper around WorldModified that allows this object to be garbage collected as needed.
+     */
+    protected static final class WeakUpdateListener implements WorldModified {
+        
+        private final WeakReference<WorldModified> listener;
+
+        public WeakUpdateListener(WorldModified listener) {
+            this.listener = new WeakReference<WorldModified>(listener);
+        }
+
+        @Override
+        public void onWorldModified(ScaffoldWorld world, Vector3ic pos, @Nullable BlockState oldState,
+                @Nullable BlockState newState) {
+            WorldModified listener = this.listener.get();
+            if (listener != null) listener.onWorldModified(world, pos, oldState, newState);
+        }
+
+    }
+
     protected Map<ChunkPos, WorldChunk> editorChunks = new HashMap<>();
     private final ScaffoldWorld scaffoldWorld;
+    private EditorWorldNetworking networking;
 
     public EditorChunkManager(ServerWorld world, Session session, DataFixer dataFixer,
             StructureTemplateManager structureTemplateManager, Executor workerExecutor, ChunkGenerator chunkGenerator,
@@ -51,10 +78,17 @@ public class EditorChunkManager extends ServerChunkManager {
                 simulationDistance, dsync, worldGenerationProgressListener, chunkStatusChangeListener,
                 persistentStateManagerFactory);
         this.scaffoldWorld = scaffoldWorld;
+        this.networking = new EditorWorldNetworking(world);
+
+        registerListeners();
     }
 
     public ScaffoldWorld getScaffoldWorld() {
         return scaffoldWorld;
+    }
+
+    private void registerListeners() {
+        ScaffoldWorldEvents.WORLD_MODIFIED.register(new WeakUpdateListener(this));
     }
     
     @Override
@@ -69,6 +103,7 @@ public class EditorChunkManager extends ServerChunkManager {
         }
         return chunk;
     }
+    
 
     @Override
     public CompletableFuture<Either<Chunk, ChunkHolder.Unloaded>> getChunkFutureSyncOnMainThread(int chunkX, int chunkZ, ChunkStatus leastStatus, boolean create) {
@@ -79,6 +114,21 @@ public class EditorChunkManager extends ServerChunkManager {
     @Nullable
     public WorldChunk getWorldChunk(int chunkX, int chunkZ) {
         return getChunk(chunkX, chunkZ, ChunkStatus.FULL, true);
+    }
+
+    @Override
+    public void onWorldModified(ScaffoldWorld world, Vector3ic pos, @Nullable BlockState oldState,
+            @Nullable BlockState newState) {
+        if (!world.equals(scaffoldWorld)) return;
+        if (oldState.equals(newState)) return;
+
+        networking.markForBlockUpdate(new BlockPos(pos.x(), pos.y(), pos.z()));
+    }
+    
+    @Override
+    public void tick(BooleanSupplier shouldKeepTicking, boolean tickChunks) {
+        if (tickChunks)
+            networking.syncChunks();
     }
     
     // Editor chunks are always "loaded"

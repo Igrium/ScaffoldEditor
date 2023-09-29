@@ -9,6 +9,8 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3i;
 import org.joml.Vector3ic;
 
+import com.igrium.scaffold.events.ScaffoldWorldEvents;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.ChunkSectionPos;
 
@@ -69,6 +71,7 @@ public class ScaffoldWorld {
 
     @Nullable
     public BlockState setBlock(int x, int y, int z, BlockState block) {
+
         int chunkX = ChunkSectionPos.getSectionCoord(x);
         int chunkY = ChunkSectionPos.getSectionCoord(y);
         int chunkZ = ChunkSectionPos.getSectionCoord(z);
@@ -86,7 +89,10 @@ public class ScaffoldWorld {
         int localY = y & 0xF;
         int localZ = z & 0xF;
 
-        return chunk.setBlockState(localX, localY, localZ, block);
+        BlockState oldState = chunk.setBlockState(localX, localY, localZ, block);
+        ScaffoldWorldEvents.WORLD_MODIFIED.invoker().onWorldModified(this, new Vector3i(x, y, z), oldState, block);
+
+        return oldState;
     }
     
     @Nullable
