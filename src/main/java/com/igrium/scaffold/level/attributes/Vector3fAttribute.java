@@ -50,4 +50,8 @@ public class Vector3fAttribute extends BaseAttribute<Vector3fc> {
         return Vector3fc.class;
     }
 
+    @Override
+    protected Vector3fc defaultValue() {
+        return new Vector3f();
+    }
 }

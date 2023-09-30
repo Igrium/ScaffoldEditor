@@ -72,7 +72,7 @@ public class AttributeHolder {
         return attribute != null ? attribute.getValue() : null;
     }
     
-    protected <T> void onAttributeChanged(T oldValue, T newValue, Attribute<T> attribute) {};
+    protected <T> void onAttributeChanged(T oldValue, T newValue, String attributeName) {};
 
     private void setupClassReflection(Class<?> clazz) throws AttributeInitializationException {
         for (Field field : clazz.getDeclaredFields()) {
@@ -106,6 +106,8 @@ public class AttributeHolder {
             }
 
             attribute.setDisplayName(displayName);
+            
+            attribute.addChangeListener((oldVal, newVal) -> onAttributeChanged(null, null, attributeName));
         }
     }
 }

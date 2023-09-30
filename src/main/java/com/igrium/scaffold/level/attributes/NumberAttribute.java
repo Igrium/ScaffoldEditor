@@ -54,6 +54,10 @@ public abstract class NumberAttribute<T extends Number> extends BaseAttribute<T>
             return Number.class;
         }
 
+        @Override
+        protected Number defaultValue() {
+            return 0;
+        }
     }
 
     public static class IntegerAttribute extends NumberAttribute<Integer> {
@@ -66,6 +70,11 @@ public abstract class NumberAttribute<T extends Number> extends BaseAttribute<T>
         @Override
         public Class<Integer> getType() {
             return Integer.class;
+        }
+
+        @Override
+        protected Integer defaultValue() {
+            return 0;
         }
     }
 
@@ -81,6 +90,11 @@ public abstract class NumberAttribute<T extends Number> extends BaseAttribute<T>
             return Long.class;
         }
 
+        @Override
+        protected Long defaultValue() {
+            return 0l;
+        }
+
     }
 
     public static class FloatAttribute extends NumberAttribute<Float> {
@@ -94,6 +108,11 @@ public abstract class NumberAttribute<T extends Number> extends BaseAttribute<T>
         public Class<Float> getType() {
             return Float.class;
         }
+
+        @Override
+        protected Float defaultValue() {
+            return 0f;
+        }
     }
 
     public static class DoubleAttribute extends NumberAttribute<Double> {
@@ -106,6 +125,11 @@ public abstract class NumberAttribute<T extends Number> extends BaseAttribute<T>
         @Override
         public Class<Double> getType() {
             return Double.class;
+        }
+
+        @Override
+        protected Double defaultValue() {
+            return 0d;
         }
     }
 

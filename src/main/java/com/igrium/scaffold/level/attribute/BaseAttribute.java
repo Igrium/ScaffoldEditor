@@ -16,6 +16,10 @@ public abstract class BaseAttribute<T> implements Attribute<T> {
 
     private String displayName = "";
 
+    public BaseAttribute() {
+        value = defaultValue();
+    }
+
     public T getValue() {
         return value;
     }
@@ -28,7 +32,7 @@ public abstract class BaseAttribute<T> implements Attribute<T> {
         T oldValue = this.value;
         this.value = value;
 
-        changeListeners.forEach(listener -> listener.onChanged(oldValue, value, this));
+        changeListeners.forEach(listener -> listener.onChanged(oldValue, value));
     }
 
     public final Set<AttributeChangeListener<T>> changeListeners() {
@@ -66,6 +70,8 @@ public abstract class BaseAttribute<T> implements Attribute<T> {
      * @param element The element to write to.
      */
     public abstract void writeXML(Element element);
+
+    protected abstract T defaultValue();
 
     @Override
     public String getDisplayName() {

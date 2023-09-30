@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.igrium.scaffold.level.item.ScaffoldItem;
 import com.igrium.scaffold.util.RecursiveIterator;
 
 public class LevelStack {
