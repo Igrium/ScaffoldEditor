@@ -4,7 +4,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import com.igrium.scaffold.pack.BaseResourcePack.ResourceType;
+import com.igrium.scaffold.pack.AbstractPack.ResourceType;
 
 import net.minecraft.util.Identifier;
 

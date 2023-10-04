@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.WeakHashMap;
 
+import com.igrium.scaffold.util.FileUtils;
+
 /**
  * Writes a pack to lose files on disk.
  */
@@ -18,8 +20,12 @@ public class FolderPackWriter extends PackWriter {
 
     protected Set<OutputStream> streams = Collections.newSetFromMap(new WeakHashMap<>());
 
-    public FolderPackWriter(Path folder) {
+    public FolderPackWriter(Path folder) throws IOException {
         this.folder = folder;
+
+        if (Files.isDirectory(folder)) {
+            FileUtils.deleteDirectory(folder);
+        }
     }
 
     public Path getFolder() {

@@ -3,8 +3,11 @@ package com.igrium.scaffold.asset;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +31,12 @@ public class AssetManager {
      */
     private List<Path> searchDirectories = new LinkedList<>();
 
+    /**
+     * Get the directories to search for assets in. Directories closer to zero in
+     * the list are prioritized.
+     * 
+     * @return A list of absolute file paths.
+     */
     public List<Path> getSearchDirectories() {
         return Collections.unmodifiableList(searchDirectories);
     }
@@ -79,27 +88,14 @@ public class AssetManager {
      * @throws IOException If an IO exception occurs.
      */
     protected <T> T loadFromDisk(AssetLoader<T> loader, String name) throws IOException {
-        Optional<Path> fileOpt = findOnDisk(name);
+        Optional<URL> fileOpt = findAsset(name);
         if (fileOpt.isEmpty()) {
             throw new FileNotFoundException("Unable to find asset: " + name);
         }
 
-        try(InputStream in = Files.newInputStream(fileOpt.get())) {
+        try(InputStream in = fileOpt.get().openStream()) {
             return loader.load(in, name);
         }
-    }
-
-    /**
-     * Locate a file on the disk based on the active search directories. This method blocks for IO operations.
-     * @param filename The asset name.
-     * @return The file path, or an empty optional if it was not found.
-     */
-    public Optional<Path> findOnDisk(String filename) {
-        for (Path path : searchDirectories) {
-            Path file = path.resolve(filename);
-            if (Files.isRegularFile(path)) return Optional.of(file);
-        }
-        return Optional.empty();
     }
 
     /**
@@ -179,4 +175,61 @@ public class AssetManager {
         return load(loader, name, false, Util.getMainWorkerExecutor());
     }
 
+    /**
+     * Search all the loaded asset sources for a file. <br>
+     * Begins by searching the project folder and other search directories. If the
+     * file is not found there, it searches Scaffold's builtin resources.
+     * 
+     * @param name Pathname of file to find relative to project root.
+     * @return URL of the located file or an empty optional if it doesn't exist. May
+     *         be a file or a reference to a file within a jar.
+     */
+    public Optional<URL> findAsset(String name) {
+        for (Path folder : searchDirectories) {
+            Path file = folder.resolve(name);
+            if (Files.isRegularFile(file)) {
+                try {
+                    return Optional.of(file.toUri().toURL());
+                } catch (MalformedURLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+
+        return Optional.ofNullable(getClass().getResource("/scaffold/" + name));
+    }
+
+    /**
+     * Get a list of all instances of an asset in search order, where assets earlier
+     * in the list are prioritized.
+     * Follows the search order defined in {@link #findAsset(String)}.
+     * 
+     * @param in Asset to search for.
+     * @return All instances of the asset.
+     * @throws IOException If an IO exception occurs.
+     */
+    public List<URL> findAssets(String name) throws IOException {
+        List<URL> assets = new ArrayList<>();
+        for (Path folder : getSearchDirectories()) {
+            Path file = folder.resolve(name);
+            if (Files.isRegularFile(file)) {
+                assets.add(file.toUri().toURL());
+            }
+        }
+
+        assets.addAll(Collections.list(getClass().getClassLoader().getResources("/scaffold/" + name)));
+        return assets;
+    }
+
+    /**
+     * Get a file as an asset relative to the project folder, as defined by the
+     * first entry in the asset manager's search directories.
+     * 
+     * @param path Path to file.
+     * @return Local asset path.
+     */
+    public String relativise(Path path) {
+        String name = searchDirectories.get(0).relativize(path).toString();
+        return name.replace('\\', '/');
+    }
 }

@@ -75,7 +75,7 @@ public class LevelEditor {
         isRunning = true;
 
         world.setUpdateExecutor(client.getServer());
-        placeTestBlocks();
+        // placeTestBlocks();
         // world.setBlock(0, 0, 0, Blocks.STONE.getDefaultState());
         // world.setBlock(0, 128, 0, Blocks.GRASS_BLOCK.getDefaultState());
     }
