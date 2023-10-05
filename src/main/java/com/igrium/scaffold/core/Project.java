@@ -3,9 +3,11 @@ package com.igrium.scaffold.core;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 
 import com.igrium.scaffold.asset.AssetManager;
+import com.igrium.scaffold.util.JoinedListView;
 import com.igrium.scaffold.util.MappedListView;
 
 public class Project {
@@ -35,7 +37,8 @@ public class Project {
     }
 
     public List<Path> getSearchPaths() {
-        return new MappedListView<>(() -> projectSettings.getSearchPaths(), this::makePathGlobal);
+        return JoinedListView.create(Collections.singletonList(projectFolder),
+                new MappedListView<>(() -> projectSettings.getSearchPaths(), this::makePathGlobal));
     }
 
     public void readProjectSettings() throws IOException {
