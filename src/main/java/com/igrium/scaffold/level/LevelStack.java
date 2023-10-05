@@ -6,13 +6,14 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.google.common.collect.Iterables;
 import com.igrium.scaffold.level.item.ScaffoldItem;
-import com.igrium.scaffold.util.RecursiveIterator;
 
 public class LevelStack {
 
     /**
-     * An item that can appear in the outliner.
+     * An item that can appear in the outliner. Each item is an iterable of all the
+     * scaffold items found in it, recursive.
      */
     public static abstract class StackItem implements Iterable<ScaffoldItem> {
 
@@ -31,10 +32,10 @@ public class LevelStack {
 
         @Override
         public Iterator<ScaffoldItem> iterator() {
-            return new RecursiveIterator<>(children);
+            return Iterables.concat(children).iterator();
         }
-
     }
+    
 
     public static class StackSingleItem extends StackItem {
         private final ScaffoldItem item;
@@ -53,7 +54,15 @@ public class LevelStack {
         public Iterator<ScaffoldItem> iterator() {
             return iterable.iterator();
         }
+    }
 
-        
+    private final StackGroup rootGroup = new StackGroup();
+
+    public StackGroup getRootGroup() {
+        return rootGroup;
+    }
+    
+    public Iterable<ScaffoldItem> items() {
+        return rootGroup;
     }
 }
