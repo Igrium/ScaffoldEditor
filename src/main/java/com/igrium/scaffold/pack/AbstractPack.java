@@ -1,7 +1,6 @@
 package com.igrium.scaffold.pack;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -167,7 +166,7 @@ public abstract class AbstractPack {
     public String writePackMeta() {
         var mcmeta = new PackMCMeta();
         mcmeta.pack = this.getMeta();
-        return GSON.toJson(source);
+        return GSON.toJson(mcmeta);
     }
 
     /**
@@ -268,7 +267,9 @@ public abstract class AbstractPack {
     }
 
     /**
-     * Compile a zip file.
+     * Compile a zip file into the pack. Zip file should contain a single folder
+     * entry titled <code>assets</code> or <code>data</code>, which houses all the
+     * resources.
      * 
      * @param writer     Output writer to write with.
      * @param sourceName Name of the root pack folder (<code>data</code> or
