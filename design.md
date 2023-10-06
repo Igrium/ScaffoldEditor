@@ -43,6 +43,8 @@
   - `article`
   
   - `object`
+  
+  - `element`
 
 - Instead of telling entities to compile all their blocks at once, there should be a "query" system that queries what block that entity believes should be there.
   

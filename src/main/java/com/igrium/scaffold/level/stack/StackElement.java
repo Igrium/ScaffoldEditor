@@ -3,26 +3,26 @@ package com.igrium.scaffold.level.stack;
 import java.util.Collections;
 import java.util.Iterator;
 
-import com.igrium.scaffold.level.item.ScaffoldItem;
+import com.igrium.scaffold.level.element.ScaffoldElement;
 
 /**
  * An element on the level stack.
  */
 public class StackElement extends StackGroup {
-    private final ScaffoldItem item;
-    private Iterable<ScaffoldItem> iterable;
+    private final ScaffoldElement element;
+    private Iterable<ScaffoldElement> iterable;
 
-    public StackElement(ScaffoldItem item) {
-            this.item = item;
-            iterable = Collections.singleton(item);
+    public StackElement(ScaffoldElement element) {
+            this.element = element;
+            iterable = Collections.singleton(element);
         }
 
-    public ScaffoldItem getItem() {
-        return item;
+    public ScaffoldElement getElement() {
+        return element;
     }
 
     @Override
-    public Iterator<ScaffoldItem> iterator() {
+    public Iterator<ScaffoldElement> iterator() {
         return iterable.iterator();
     }
 }

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import com.igrium.scaffold.level.item.ScaffoldItem;
+import com.igrium.scaffold.level.element.ScaffoldElement;
 import com.igrium.scaffold.level.stack.StackGroup;
 
 /**
@@ -17,7 +17,7 @@ public class Level {
     /**
      * A cache of entity ids.
      */
-    private Map<String, ScaffoldItem> idCache = new HashMap<>();
+    private Map<String, ScaffoldElement> idCache = new HashMap<>();
 
     /**
      * Get the level stack.
@@ -28,40 +28,40 @@ public class Level {
     }
 
     /**
-     * Find an item by its ID. Note: the returned item may not still be in the
+     * Find an element by its ID. Note: the returned element may not still be in the
      * level.
      * 
      * @param id The ID to look for.
-     * @return The item, or an empty optional if it was not found.
+     * @return The element, or an empty optional if it was not found.
      */
-    public Optional<ScaffoldItem> getItem(String id) {
-        ScaffoldItem item = idCache.get(id);
-        if (item != null && item.getLevel() == this) return Optional.of(item);
+    public Optional<ScaffoldElement> getElement(String id) {
+        ScaffoldElement element = idCache.get(id);
+        if (element != null && element.getLevel() == this) return Optional.of(element);
 
-        for (ScaffoldItem levelItem : levelStack) {
-            if (levelItem.getId().equals(id)) {
-                idCache.put(id, levelItem);
-                return Optional.of(levelItem);
+        for (ScaffoldElement levelElement : levelStack) {
+            if (levelElement.getId().equals(id)) {
+                idCache.put(id, levelElement);
+                return Optional.of(levelElement);
             }
         }
         return Optional.empty();
     }
 
     /**
-     * Rebuild the item ID cache.
+     * Rebuild the element ID cache.
      */
     public void refreshCache() {
         idCache.clear();
-        for (ScaffoldItem item : levelStack) {
-            idCache.put(item.getId(), item);
+        for (ScaffoldElement element : levelStack) {
+            idCache.put(element.getId(), element);
         }
     }
 
-    public void removeItem(ScaffoldItem item) {
-        if (item.getLevel() != this) {
-            throw new IllegalArgumentException("The supplied item is not part of this level.");
+    public void removeElement(ScaffoldElement element) {
+        if (element.getLevel() != this) {
+            throw new IllegalArgumentException("The supplied element is not part of this level.");
         }
-        item.getStackItem().detach();
+        element.getStackItem().detach();
         
     }
 }

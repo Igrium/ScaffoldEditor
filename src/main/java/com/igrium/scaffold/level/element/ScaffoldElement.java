@@ -1,4 +1,4 @@
-package com.igrium.scaffold.level.item;
+package com.igrium.scaffold.level.element;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.dom4j.Element;
@@ -16,23 +16,23 @@ import com.igrium.scaffold.level.attributes.Vector3fAttribute;
 import com.igrium.scaffold.level.stack.StackElement;
 import com.mojang.logging.LogUtils;
 
-public abstract class ScaffoldItem extends AttributeHolder {
+public abstract class ScaffoldElement extends AttributeHolder {
 
 
     /**
-     * A unique ID that's used to identify this item during serialization.
+     * A unique ID that's used to identify this element during serialization.
      */
     private String id = RandomStringUtils.randomAlphanumeric(8);
 
-    private final ItemType<?> type;
+    private final ElementType<?> type;
 
-    public ItemType<?> getType() {
+    public ElementType<?> getType() {
         return type;
     }
 
     /**
-     * Get this item's ID.
-     * @return A unique ID that's used to identify this item during serialization.
+     * Get this element's ID.
+     * @return A unique ID that's used to identify this element during serialization.
      */
     public final String getId() {
         return id;
@@ -49,7 +49,7 @@ public abstract class ScaffoldItem extends AttributeHolder {
         return level;
     }
 
-    public ScaffoldItem(ItemType<?> type, Level level) {
+    public ScaffoldElement(ElementType<?> type, Level level) {
         this.level = level;
         position.addChangeListener(this::onSetExactPosition);
         this.type = type;
@@ -58,8 +58,8 @@ public abstract class ScaffoldItem extends AttributeHolder {
     private StackElement stackItem = new StackElement(this);
     
     /**
-     * This item's "handle" on the level stack.
-     * @return Item handle.
+     * This element's "handle" on the level stack.
+     * @return Element handle.
      */
     public StackElement getStackItem() {
         return stackItem;
@@ -78,7 +78,7 @@ public abstract class ScaffoldItem extends AttributeHolder {
     }
 
     /**
-     * Get this item's position.
+     * Get this element's position.
      * 
      * @return The exact position.
      */
@@ -87,7 +87,7 @@ public abstract class ScaffoldItem extends AttributeHolder {
     }
 
     /**
-     * Get this item's grid position.
+     * Get this element's grid position.
      * 
      * @return Position aligned to the block grid.
      */
@@ -96,7 +96,7 @@ public abstract class ScaffoldItem extends AttributeHolder {
     }
 
     /**
-     * Set this item's position.
+     * Set this element's position.
      * 
      * @param position Exact position.
      */
@@ -105,7 +105,7 @@ public abstract class ScaffoldItem extends AttributeHolder {
     }
 
     /**
-     * Set this item's position.
+     * Set this element's position.
      * 
      * @param position Position on the block grid.
      */

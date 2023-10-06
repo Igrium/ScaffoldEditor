@@ -5,7 +5,7 @@ import java.util.Set;
 import org.dom4j.Element;
 
 /**
- * A field within an item that is saved into the level file and can be modified
+ * A field within an element that is saved into the level file and can be modified
  * in the UI.
  */
 public interface Attribute<T> {

@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * <p>
  * Handles attribute management via Java fields. Intended to ease the
- * programming of new Scaffold items.
+ * programming of new Scaffold elements.
  * </p>
  * <p>
  * To define an attribute, simply mark a field in your class with

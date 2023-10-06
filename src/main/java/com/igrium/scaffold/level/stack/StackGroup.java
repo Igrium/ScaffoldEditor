@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.common.collect.Iterables;
-import com.igrium.scaffold.level.item.ScaffoldItem;
+import com.igrium.scaffold.level.element.ScaffoldElement;
 import com.igrium.scaffold.util.IndexedList;
 
 /**
@@ -23,7 +23,7 @@ public class StackGroup extends StackItem {
     }
 
     @Override
-    public Iterator<ScaffoldItem> iterator() {
+    public Iterator<ScaffoldElement> iterator() {
         return Iterables.concat(children).iterator();
     }
 

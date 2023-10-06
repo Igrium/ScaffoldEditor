@@ -4,12 +4,12 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.igrium.scaffold.level.item.ScaffoldItem;
+import com.igrium.scaffold.level.element.ScaffoldElement;
 
 /**
  * A single item on the level stack. May be an element or a group.
  */
-public abstract class StackItem implements Iterable<ScaffoldItem> {
+public abstract class StackItem implements Iterable<ScaffoldElement> {
     protected StackGroup parent;
 
     @Nullable
