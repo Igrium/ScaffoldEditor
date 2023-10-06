@@ -1,7 +1,5 @@
 package com.igrium.scaffold.util;
 
-import java.util.Iterator;
-
 // /**
 //  * An iterator that recursively iterates through child iterables.
 //  */

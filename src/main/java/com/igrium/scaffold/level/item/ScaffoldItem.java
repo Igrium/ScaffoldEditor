@@ -7,23 +7,28 @@ import org.joml.Vector3fc;
 import org.joml.Vector3i;
 import org.joml.Vector3ic;
 
+import com.igrium.scaffold.level.Level;
 import com.igrium.scaffold.level.attribute.Attrib;
 import com.igrium.scaffold.level.attribute.Attribute;
 import com.igrium.scaffold.level.attribute.AttributeHolder;
 import com.igrium.scaffold.level.attribute.InvalidAttributeException;
 import com.igrium.scaffold.level.attributes.Vector3fAttribute;
+import com.igrium.scaffold.level.stack.StackElement;
 import com.mojang.logging.LogUtils;
 
 public abstract class ScaffoldItem extends AttributeHolder {
 
-    public ScaffoldItem() {
-        position.addChangeListener(this::onSetExactPosition);
-    }
 
     /**
      * A unique ID that's used to identify this item during serialization.
      */
     private String id = RandomStringUtils.randomAlphanumeric(8);
+
+    private final ItemType<?> type;
+
+    public ItemType<?> getType() {
+        return type;
+    }
 
     /**
      * Get this item's ID.
@@ -36,6 +41,28 @@ public abstract class ScaffoldItem extends AttributeHolder {
     @Deprecated
     public final void setId(String id) {
         this.id = id;
+    }
+
+    private Level level;
+
+    public Level getLevel() {
+        return level;
+    }
+
+    public ScaffoldItem(ItemType<?> type, Level level) {
+        this.level = level;
+        position.addChangeListener(this::onSetExactPosition);
+        this.type = type;
+    }
+
+    private StackElement stackItem = new StackElement(this);
+    
+    /**
+     * This item's "handle" on the level stack.
+     * @return Item handle.
+     */
+    public StackElement getStackItem() {
+        return stackItem;
     }
 
     @Attrib(displayName = "Position")
