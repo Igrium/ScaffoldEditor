@@ -21,6 +21,14 @@ public abstract class AbstractFunction {
         return id;
     }
 
+    /**
+     * Get the path of the function in a datapack.
+     * @return Resource ID.
+     */
+    public Identifier getResourceId() {
+        return new Identifier(id.getNamespace(), "functions/"+id.getPath()+".mcfunction");
+    }
+
     public void setId(Identifier id) {
         this.id = id;
     }

@@ -3,7 +3,7 @@ package com.igrium.scaffold.level.attributes;
 import org.dom4j.Element;
 
 import com.igrium.scaffold.level.attribute.BaseAttribute;
-import com.igrium.scaffold.level.attribute.InvalidAttributeException;
+import com.igrium.scaffold.util.InvalidXMLException;
 
 public class EnumAttribute<E extends Enum<E>> extends BaseAttribute<E> {
 
@@ -22,16 +22,16 @@ public class EnumAttribute<E extends Enum<E>> extends BaseAttribute<E> {
     }
 
     @Override
-    public void readXML(Element element) throws InvalidAttributeException {
+    public void readXML(Element element) throws InvalidXMLException {
         String value = element.attributeValue("value");
         if (value == null || value.length() == 0)
-            throw new InvalidAttributeException(element, "No value attribute found.");
+            throw new InvalidXMLException(element, "No value attribute found.");
 
         try {
             int ordinal = Integer.parseInt(value);
             E[] constants = enumClass.getEnumConstants();
             if (ordinal < 0 || ordinal >= constants.length)
-                throw new InvalidAttributeException(element, "Enum ordinal is out of range.");
+                throw new InvalidXMLException(element, "Enum ordinal is out of range.");
 
         // If there was a number format exception, this is text-based serialization.
         } catch (NumberFormatException e) {
@@ -39,7 +39,7 @@ public class EnumAttribute<E extends Enum<E>> extends BaseAttribute<E> {
             try {
                 setValue(Enum.valueOf(enumClass, value));
             } catch (IllegalArgumentException t) {
-                throw new InvalidAttributeException(element, "Name is invalid for this enum.", t);
+                throw new InvalidXMLException(element, "Name is invalid for this enum.", t);
             }
 
         }

@@ -6,6 +6,8 @@ import java.util.Set;
 
 import org.dom4j.Element;
 
+import com.igrium.scaffold.util.InvalidXMLException;
+
 /**
  * A basic implementation of Attribute that takes care of managing listeners and the like.
  */
@@ -56,21 +58,16 @@ public abstract class BaseAttribute<T> implements Attribute<T> {
         return changeListeners.remove(listener);
     }
 
-    /**
-     * Read the data from an XML element and apply it to this attribute.
-     * 
-     * @param element The element to read from.
-     * @throws InvalidAttributeException If there is something wrong with the data
-     *                                   in the element.
-     */
-    public abstract void readXML(Element element) throws InvalidAttributeException;
+    public abstract void readXML(Element element) throws InvalidXMLException;
 
-    /**
-     * Write the data from this attribute into an XML element.
-     * @param element The element to write to.
-     */
     public abstract void writeXML(Element element);
 
+    /**
+     * Get the default value that this attribute will hold at spawn.
+     * 
+     * @return The default value. If the value is mutable, this must be a new
+     *         instance.
+     */
     protected abstract T defaultValue();
 
     @Override

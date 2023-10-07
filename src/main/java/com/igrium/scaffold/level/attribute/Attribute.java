@@ -4,11 +4,14 @@ import java.util.Set;
 
 import org.dom4j.Element;
 
+import com.igrium.scaffold.util.InvalidXMLException;
+import com.igrium.scaffold.util.XMLSerializable;
+
 /**
  * A field within an element that is saved into the level file and can be modified
  * in the UI.
  */
-public interface Attribute<T> {
+public interface Attribute<T> extends XMLSerializable {
 
     /**
      * Get the value of the attribute.
@@ -51,20 +54,9 @@ public interface Attribute<T> {
      */
     public boolean removeChangeListener(AttributeChangeListener<?> listener);
 
-    /**
-     * Read the data from an XML element and apply it to this attribute.
-     * 
-     * @param element The element to read from.
-     * @throws InvalidAttributeException If there is something wrong with the data
-     *                                   in the element.
-     */
-    public void readXML(Element element) throws InvalidAttributeException;
 
-    /**
-     * Write the data from this attribute into an XML element.
-     * 
-     * @param element The element to write to.
-     */
+    public void readXML(Element element) throws InvalidXMLException;
+
     public void writeXML(Element element);
 
     /**

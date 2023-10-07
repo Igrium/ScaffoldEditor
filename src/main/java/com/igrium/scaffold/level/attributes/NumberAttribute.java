@@ -6,7 +6,7 @@ import java.text.ParseException;
 import org.dom4j.Element;
 
 import com.igrium.scaffold.level.attribute.BaseAttribute;
-import com.igrium.scaffold.level.attribute.InvalidAttributeException;
+import com.igrium.scaffold.util.InvalidXMLException;
 
 /**
  * An attribute that contains a number of some kind.
@@ -14,16 +14,16 @@ import com.igrium.scaffold.level.attribute.InvalidAttributeException;
 public abstract class NumberAttribute<T extends Number> extends BaseAttribute<T> {
 
     @Override
-    public void readXML(Element element) throws InvalidAttributeException {
+    public void readXML(Element element) throws InvalidXMLException {
         String value = element.attributeValue("value");
         if (value == null)
-            throw new InvalidAttributeException(element, "No value attribute found.");
+            throw new InvalidXMLException(element, "No value attribute found.");
 
         try {
             setValue(parseString(value));
 
         } catch (NumberFormatException e) {
-            throw new InvalidAttributeException(element, "Unable to parse string as number.", e);
+            throw new InvalidXMLException(element, "Unable to parse string as number.", e);
         }
     }
 

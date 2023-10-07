@@ -5,7 +5,7 @@ import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
 import com.igrium.scaffold.level.attribute.BaseAttribute;
-import com.igrium.scaffold.level.attribute.InvalidAttributeException;
+import com.igrium.scaffold.util.InvalidXMLException;
 
 public class Vector3fAttribute extends BaseAttribute<Vector3fc> {
 
@@ -16,15 +16,15 @@ public class Vector3fAttribute extends BaseAttribute<Vector3fc> {
     }
 
     @Override
-    public void readXML(Element element) throws InvalidAttributeException {
+    public void readXML(Element element) throws InvalidXMLException {
         String value = element.attributeValue("value");
         if (value == null || value.length() == 0)
-            throw new InvalidAttributeException(element, "No value attribute found.");
+            throw new InvalidXMLException(element, "No value attribute found.");
 
         value = value.replace("[", "").replaceAll("]", "");
         String[] values = value.split(",");
         if (values.length != 3)
-            throw new InvalidAttributeException(element,
+            throw new InvalidXMLException(element,
                     String.format("Incorrect number of elements in array. %d != %d", values.length, 3));
 
         try {
@@ -33,7 +33,7 @@ public class Vector3fAttribute extends BaseAttribute<Vector3fc> {
                     Float.parseFloat(values[1]),
                     Float.parseFloat(values[2])));
         } catch (NumberFormatException e) {
-            throw new InvalidAttributeException(element, "Unable to parse number value(s).", e);
+            throw new InvalidXMLException(element, "Unable to parse number value(s).", e);
         }
 
     }

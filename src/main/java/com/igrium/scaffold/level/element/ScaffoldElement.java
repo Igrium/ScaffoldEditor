@@ -11,12 +11,13 @@ import com.igrium.scaffold.level.Level;
 import com.igrium.scaffold.level.attribute.Attrib;
 import com.igrium.scaffold.level.attribute.Attribute;
 import com.igrium.scaffold.level.attribute.AttributeHolder;
-import com.igrium.scaffold.level.attribute.InvalidAttributeException;
 import com.igrium.scaffold.level.attributes.Vector3fAttribute;
 import com.igrium.scaffold.level.stack.StackElement;
+import com.igrium.scaffold.util.InvalidXMLException;
+import com.igrium.scaffold.util.XMLSerializable;
 import com.mojang.logging.LogUtils;
 
-public abstract class ScaffoldElement extends AttributeHolder {
+public abstract class ScaffoldElement extends AttributeHolder implements XMLSerializable {
 
 
     /**
@@ -113,10 +114,6 @@ public abstract class ScaffoldElement extends AttributeHolder {
         this.position.setValue(new Vector3f(position));
     }
 
-    /**
-     * Deserialize the values from an XML element and apply them to this entity.
-     * @param element Element to deserialize.
-     */
     public void readXML(Element element) {
         String id = element.attributeValue("id");
         if (id != null && !id.isEmpty())
@@ -135,7 +132,7 @@ public abstract class ScaffoldElement extends AttributeHolder {
 
             try {
                 attribute.readXML(attribElement);
-            } catch (InvalidAttributeException e) {
+            } catch (InvalidXMLException e) {
                 LogUtils.getLogger()
                         .error(String.format("Unable to parse attribute '%s' on item: %s", attributeName, id), e);
             }

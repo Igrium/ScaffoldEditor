@@ -2,6 +2,7 @@ package com.igrium.scaffold.util;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -113,5 +114,16 @@ public class IndexedList<T> extends AbstractList<T> {
         for (T element : base) {
             updateCount(element, i -> i + 1);
         }
+    }
+
+
+    @Override
+    public boolean contains(Object o) {
+        return itemCounts.containsKey(o);
+    }
+
+    @Override
+    public boolean containsAll(Collection<?> c) {
+        return itemCounts.keySet().containsAll(c);
     }
 }
