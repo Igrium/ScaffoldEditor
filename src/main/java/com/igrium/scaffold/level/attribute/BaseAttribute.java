@@ -2,6 +2,7 @@ package com.igrium.scaffold.level.attribute;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import org.dom4j.Element;
@@ -80,4 +81,16 @@ public abstract class BaseAttribute<T> implements Attribute<T> {
         this.displayName = displayName;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Attribute attribute) {
+            return Objects.equals(getValue(), attribute.getValue());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getValue());
+    }
 }

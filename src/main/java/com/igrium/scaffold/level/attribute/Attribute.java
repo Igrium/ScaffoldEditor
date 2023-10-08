@@ -24,6 +24,17 @@ public interface Attribute<T> extends XMLSerializable {
      * @param value New attribute value.
      */
     public void setValue(T value);
+    
+    /**
+     * Attempt to get the value as a specific type.
+     * @param <V> Type to get.
+     * @param clazz Type class.
+     * @return The value.
+     * @throws ClassCastException If the value cannot be cast to this class.
+     */
+    public default <V> V getValue(Class<V> clazz) throws ClassCastException {
+        return clazz.cast(getValue());
+    }
 
     /**
      * Cast and set the value of this attribute.

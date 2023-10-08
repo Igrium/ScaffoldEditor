@@ -13,7 +13,7 @@ public class DataPack extends AbstractPack {
 
     private Collection<AbstractFunction> functions = new HashSet<>();
 
-    public Collection<AbstractFunction> getFunctions() {
+    public Collection<AbstractFunction> functions() {
         return functions;
     }
 

@@ -13,6 +13,7 @@ import com.igrium.scaffold.level.attribute.Attribute;
 import com.igrium.scaffold.level.attribute.AttributeHolder;
 import com.igrium.scaffold.level.attributes.Vector3fAttribute;
 import com.igrium.scaffold.level.stack.StackElement;
+import com.igrium.scaffold.pack.DataPack;
 import com.igrium.scaffold.util.InvalidXMLException;
 import com.igrium.scaffold.util.XMLSerializable;
 import com.mojang.logging.LogUtils;
@@ -113,6 +114,8 @@ public abstract class ScaffoldElement extends AttributeHolder implements XMLSeri
     public void setPosition(Vector3ic position) {
         this.position.setValue(new Vector3f(position));
     }
+
+    public abstract void compileLogic(DataPack datapack);
 
     public void readXML(Element element) {
         String id = element.attributeValue("id");

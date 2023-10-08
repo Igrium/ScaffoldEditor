@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.common.collect.Iterables;
 import com.igrium.scaffold.level.element.ScaffoldElement;
-import com.igrium.scaffold.util.IndexedList;
+import com.igrium.scaffold.util.collections.IndexedList;
 
 /**
  * A group on the level stack.
