@@ -6,7 +6,7 @@ import org.dom4j.Element;
  * Thrown when an attribute trys to parse an XML element that doesn't have the
  * proper data.
  */
-public class InvalidXMLException extends Exception {
+public class  InvalidXMLException extends Exception {
     private final Element element;
 
     /**

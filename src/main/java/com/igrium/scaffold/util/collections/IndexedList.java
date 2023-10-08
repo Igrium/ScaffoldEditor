@@ -1,4 +1,4 @@
-package com.igrium.scaffold.util;
+package com.igrium.scaffold.util.collections;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
