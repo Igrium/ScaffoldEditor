@@ -1,9 +1,15 @@
 package com.igrium.scaffold.level;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import com.igrium.scaffold.compile.CompileConfig;
+import com.igrium.scaffold.compile.ScaffoldCompiler;
+import com.igrium.scaffold.compile.ScaffoldCompiler.CompileResult;
+import com.igrium.scaffold.core.Project;
+import com.igrium.scaffold.level.attributes.PathAttribute;
 import com.igrium.scaffold.level.element.ScaffoldElement;
 import com.igrium.scaffold.level.stack.StackGroup;
 
@@ -12,12 +18,22 @@ import com.igrium.scaffold.level.stack.StackGroup;
  */
 public class Level {
 
+    private final Project project;
+
     private final StackGroup levelStack = new StackGroup();
+
+    public Level(Project project) {
+        this.project = project;
+    }
 
     /**
      * A cache of entity ids.
      */
     private Map<String, ScaffoldElement> idCache = new HashMap<>();
+
+    public final Project getProject() {
+        return project;
+    }
 
     /**
      * Get the level stack.
@@ -63,5 +79,14 @@ public class Level {
         }
         element.getStackItem().detach();
         
+    }
+
+    public CompileResult compile(Path target) {
+        CompileConfig compileConfig = new CompileConfig();
+        compileConfig.setOption("target", new PathAttribute(target));
+
+        ScaffoldCompiler compiler = new ScaffoldCompiler(compileConfig, this, getProject());
+        compiler.setupCompileSteps();
+        return compiler.compile();
     }
 }

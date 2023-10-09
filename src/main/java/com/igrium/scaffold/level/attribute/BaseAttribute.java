@@ -19,8 +19,8 @@ public abstract class BaseAttribute<T> implements Attribute<T> {
 
     private String displayName = "";
 
-    public BaseAttribute() {
-        value = defaultValue();
+    public BaseAttribute(T initialValue) {
+        this.value = initialValue;
     }
 
     public T getValue() {
@@ -62,14 +62,6 @@ public abstract class BaseAttribute<T> implements Attribute<T> {
     public abstract void readXML(Element element) throws InvalidXMLException;
 
     public abstract void writeXML(Element element);
-
-    /**
-     * Get the default value that this attribute will hold at spawn.
-     * 
-     * @return The default value. If the value is mutable, this must be a new
-     *         instance.
-     */
-    protected abstract T defaultValue();
 
     @Override
     public String getDisplayName() {

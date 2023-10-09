@@ -9,6 +9,14 @@ import com.igrium.scaffold.util.InvalidXMLException;
 
 public class Vector3fAttribute extends BaseAttribute<Vector3fc> {
 
+    public Vector3fAttribute(Vector3fc initialValue) {
+        super(new Vector3f(initialValue));
+    }
+
+    public Vector3fAttribute() {
+        super(new Vector3f());
+    }
+
     @Override
     public void setValue(Vector3fc value) {
         // Make sure we don't have any unwanted mutable references.
@@ -48,10 +56,5 @@ public class Vector3fAttribute extends BaseAttribute<Vector3fc> {
     @Override
     public Class<Vector3fc> getType() {
         return Vector3fc.class;
-    }
-
-    @Override
-    protected Vector3fc defaultValue() {
-        return new Vector3f();
     }
 }

@@ -2,10 +2,13 @@ package com.igrium.scaffold;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.Event;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.igrium.scaffold.compile.CompileRegistrationCallback;
+import com.igrium.scaffold.compile.steps.ScaffoldCompileSteps;
 import com.igrium.scaffold.test.ScaffoldPlaceCommand;
 import com.igrium.scaffold.test.TestProjectCommand;
 
@@ -19,6 +22,8 @@ public class ScaffoldEditorMod implements ModInitializer {
     public void onInitialize() {
         CommandRegistrationCallback.EVENT.register(ScaffoldPlaceCommand::register);
         CommandRegistrationCallback.EVENT.register(TestProjectCommand::register);
+
+        CompileRegistrationCallback.EVENT.register(Event.DEFAULT_PHASE, ScaffoldCompileSteps::register);
     }
 
 }

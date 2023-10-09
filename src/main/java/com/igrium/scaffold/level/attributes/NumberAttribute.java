@@ -13,6 +13,10 @@ import com.igrium.scaffold.util.InvalidXMLException;
  */
 public abstract class NumberAttribute<T extends Number> extends BaseAttribute<T> {
 
+    public NumberAttribute(T initialValue) {
+        super(initialValue);
+    }
+
     @Override
     public void readXML(Element element) throws InvalidXMLException {
         String value = element.attributeValue("value");
@@ -40,6 +44,10 @@ public abstract class NumberAttribute<T extends Number> extends BaseAttribute<T>
      */
     public static class GenericNumberAttribute extends NumberAttribute<Number> {
 
+        public GenericNumberAttribute(Number initialValue) {
+            super(initialValue);
+        }
+
         @Override
         protected Number parseString(String input) throws NumberFormatException {
             try {
@@ -54,13 +62,13 @@ public abstract class NumberAttribute<T extends Number> extends BaseAttribute<T>
             return Number.class;
         }
 
-        @Override
-        protected Number defaultValue() {
-            return 0;
-        }
     }
 
     public static class IntegerAttribute extends NumberAttribute<Integer> {
+
+        public IntegerAttribute(Integer initialValue) {
+            super(initialValue);
+        }
 
         @Override
         protected Integer parseString(String input) throws NumberFormatException {
@@ -72,13 +80,13 @@ public abstract class NumberAttribute<T extends Number> extends BaseAttribute<T>
             return Integer.class;
         }
 
-        @Override
-        protected Integer defaultValue() {
-            return 0;
-        }
     }
 
     public static class LongAttribute extends NumberAttribute<Long> {
+
+        public LongAttribute(Long initialValue) {
+            super(initialValue);
+        }
 
         @Override
         protected Long parseString(String input) throws NumberFormatException {
@@ -90,14 +98,13 @@ public abstract class NumberAttribute<T extends Number> extends BaseAttribute<T>
             return Long.class;
         }
 
-        @Override
-        protected Long defaultValue() {
-            return 0l;
-        }
-
     }
 
     public static class FloatAttribute extends NumberAttribute<Float> {
+
+        public FloatAttribute(Float initialValue) {
+            super(initialValue);
+        }
 
         @Override
         protected Float parseString(String input) throws NumberFormatException {
@@ -109,13 +116,13 @@ public abstract class NumberAttribute<T extends Number> extends BaseAttribute<T>
             return Float.class;
         }
 
-        @Override
-        protected Float defaultValue() {
-            return 0f;
-        }
     }
 
     public static class DoubleAttribute extends NumberAttribute<Double> {
+
+        public DoubleAttribute(Double initialValue) {
+            super(initialValue);
+        }
 
         @Override
         protected Double parseString(String input) throws NumberFormatException {
@@ -127,10 +134,6 @@ public abstract class NumberAttribute<T extends Number> extends BaseAttribute<T>
             return Double.class;
         }
 
-        @Override
-        protected Double defaultValue() {
-            return 0d;
-        }
     }
 
 }

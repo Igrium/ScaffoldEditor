@@ -7,6 +7,14 @@ import com.igrium.scaffold.util.InvalidXMLException;
 
 public class BooleanAttribute extends BaseAttribute<Boolean> {
 
+    public BooleanAttribute(boolean defaultValue) {
+        super(defaultValue);
+    }
+
+    public BooleanAttribute() {
+        super(false);
+    }
+
     @Override
     public Class<Boolean> getType() {
         return Boolean.class;
@@ -23,11 +31,6 @@ public class BooleanAttribute extends BaseAttribute<Boolean> {
     @Override
     public void writeXML(Element element) {
         element.addAttribute("value", getValue().toString());
-    }
-
-    @Override
-    protected Boolean defaultValue() {
-        return false;
     }
     
 }

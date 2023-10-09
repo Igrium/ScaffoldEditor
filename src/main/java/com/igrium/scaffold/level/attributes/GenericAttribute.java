@@ -18,6 +18,11 @@ public class GenericAttribute<T extends XMLSerializable> extends BaseAttribute<T
     private Supplier<T> constructor;
 
     public GenericAttribute(Class<T> type, Supplier<T> constructor) {
+        this(type, constructor, constructor.get());
+    }
+
+    public GenericAttribute(Class<T> type, Supplier<T> constructor, T initialValue) {
+        super(initialValue);
         this.type = type;
         this.constructor = constructor;
     }
@@ -33,7 +38,7 @@ public class GenericAttribute<T extends XMLSerializable> extends BaseAttribute<T
         if (elements.isEmpty()) {
             throw new InvalidXMLException(element, "Element is empty.");
         }
-        T newValue = defaultValue();
+        T newValue = constructor.get();
         newValue.readXML(elements.iterator().next());
         setValue(newValue);
     }
@@ -42,11 +47,6 @@ public class GenericAttribute<T extends XMLSerializable> extends BaseAttribute<T
     public void writeXML(Element element) {
         Element child = element.addElement("attribute_data");
         getValue().writeXML(child);
-    }
-
-    @Override
-    protected T defaultValue() {
-        return constructor.get();
     }
     
 }

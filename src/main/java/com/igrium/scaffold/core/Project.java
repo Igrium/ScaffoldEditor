@@ -60,7 +60,7 @@ public class Project {
     /**
      * Turn a path into a global path relative to this project folder.
      */
-    private Path makePathGlobal(Path path) {
+    public Path makePathGlobal(Path path) {
         if (path.isAbsolute()) return path;
         return projectFolder.resolve(path);
     }

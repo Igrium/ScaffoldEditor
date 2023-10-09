@@ -9,7 +9,16 @@ public class EnumAttribute<E extends Enum<E>> extends BaseAttribute<E> {
 
     private Class<E> enumClass;
 
+    public EnumAttribute(E initialValue) {
+        super(initialValue);
+        if (!initialValue.getClass().isEnum()) {
+            throw new IllegalArgumentException("The supplied class must be an enum.");
+        }
+        this.enumClass = initialValue.getDeclaringClass();
+    }
+
     public EnumAttribute(Class<E> enumClass) {
+        super(enumClass.getEnumConstants()[0]);
         this.enumClass = enumClass;
         if (!enumClass.isEnum()) {
             throw new IllegalArgumentException("The supplied class must be an enum.");
@@ -49,10 +58,4 @@ public class EnumAttribute<E extends Enum<E>> extends BaseAttribute<E> {
     public void writeXML(Element element) {
         element.addAttribute("value", getValue().name());
     }
-
-    @Override
-    protected E defaultValue() {
-        return enumClass.getEnumConstants()[0];
-    }
-
 }

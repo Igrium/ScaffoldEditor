@@ -1,5 +1,7 @@
 package com.igrium.scaffold.compile;
 
+import org.slf4j.Logger;
+
 public interface CompileStep {
 
     /**
@@ -16,7 +18,8 @@ public interface CompileStep {
      * Execute this compile step.
      * @param compiler The compiler to use.
      * @param config The compile config.
+     * @param logger The logger to output to.
      * @throws Exception If this compile step fails for any reason.
      */
-    public void execute(ScaffoldCompiler compiler, CompileConfig config) throws Exception;
+    public void execute(ScaffoldCompiler compiler, CompileConfig config, Logger logger) throws Exception;
 }

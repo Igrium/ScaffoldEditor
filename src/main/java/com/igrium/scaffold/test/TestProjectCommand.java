@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import com.igrium.scaffold.compile.ScaffoldCompiler.CompileResult;
+import com.igrium.scaffold.compile.ScaffoldCompiler.CompileStatus;
 import com.igrium.scaffold.core.Project;
+import com.igrium.scaffold.level.Level;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -35,8 +38,9 @@ public class TestProjectCommand {
         File runDirectory = context.getSource().getServer().getRunDirectory();
         Path projectFolder = runDirectory.toPath().resolve(StringArgumentType.getString(context, "name"));
 
+        Project project;
         try {
-            Project project = new Project(projectFolder);
+            project = new Project(projectFolder);
             project.getProjectSettings().getSearchPaths().add(Paths.get("blah"));
             project.getProjectSettings().getSearchPaths().add(Paths.get("/absolute"));
             project.saveProjectSettings();
@@ -48,7 +52,19 @@ public class TestProjectCommand {
             LogUtils.getLogger().error("An IO exception occurred", e);
             throw ioError.create(e);
         }
-        return 1;
+
+        Path compileDir = projectFolder.resolve("compiled");
+        Level level = new Level(project);
+        CompileResult result = level.compile(compileDir);
+        if (result.status() == CompileStatus.COMPLETE) {
+            context.getSource().sendFeedback(() -> Text.literal("Compiled to " + compileDir), false);
+            return 1;
+        } else {
+            context.getSource().sendError(Text.literal("Compile failed."));
+            LogUtils.getLogger().error("Compile failed.", result.exception());
+            return 0;
+        }
+
     }
 
 }

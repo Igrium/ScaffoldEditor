@@ -16,18 +16,17 @@ public class JsonAttribute<T> extends BaseAttribute<T> {
 
     private final Gson gson;
     private final Class<T> type;
-    private final Supplier<T> constructor;
 
     public JsonAttribute(Gson gson, Class<T> type, Supplier<T> constructor) {
+        super(constructor.get());
         this.gson = gson;
         this.type = type;
-        this.constructor = constructor;
     }
 
     public JsonAttribute(Class<T> type, Supplier<T> constructor) {
+        super(constructor.get());
         this.gson = new Gson();
         this.type = type;
-        this.constructor = constructor;
     }
 
     public Gson getGson() {
@@ -53,11 +52,6 @@ public class JsonAttribute<T> extends BaseAttribute<T> {
     @Override
     public void writeXML(Element element) {
         element.setText(gson.toJson(element));
-    }
-
-    @Override
-    protected T defaultValue() {
-        return constructor.get();
     }
     
 }

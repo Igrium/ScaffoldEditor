@@ -7,6 +7,10 @@ import com.igrium.scaffold.util.InvalidXMLException;
 
 public class StringAttribute extends BaseAttribute<String> {
 
+    public StringAttribute(String initialValue) {
+        super(initialValue);
+    }
+
     @Override
     public Class<String> getType() {
         return String.class;
@@ -22,11 +26,6 @@ public class StringAttribute extends BaseAttribute<String> {
     @Override
     public void writeXML(Element element) {
         element.addAttribute("value", getValue());
-    }
-
-    @Override
-    protected String defaultValue() {
-        return "";
     }
     
 }
