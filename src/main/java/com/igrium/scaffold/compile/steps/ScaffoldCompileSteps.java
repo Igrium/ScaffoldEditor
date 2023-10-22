@@ -7,6 +7,10 @@ import com.igrium.scaffold.compile.CompileStep;
 
 public final class ScaffoldCompileSteps {
     public static void register(List<CompileStep> steps, CompileConfig config) {
-        steps.add(new SetupCompileStep());
+        steps.add(new LogicCompileStep());
+    }
+
+    public static void registerPost(List<CompileStep> steps, CompileConfig config) {
+        steps.add(new SaveDatapackCompileStep());
     }
 }

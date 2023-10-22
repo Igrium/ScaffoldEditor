@@ -17,9 +17,9 @@ public interface CompileStep {
     /**
      * Execute this compile step.
      * @param compiler The compiler to use.
-     * @param config The compile config.
+     * @param context The compile context.
      * @param logger The logger to output to.
      * @throws Exception If this compile step fails for any reason.
      */
-    public void execute(ScaffoldCompiler compiler, CompileConfig config, Logger logger) throws Exception;
+    public void execute(ScaffoldCompiler compiler, CompileContext context, Logger logger) throws Exception;
 }

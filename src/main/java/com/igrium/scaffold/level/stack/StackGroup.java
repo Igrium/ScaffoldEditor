@@ -36,4 +36,8 @@ public class StackGroup extends StackItem {
             child.setParent(this);
         }
     }
+
+    public void addElement(ScaffoldElement element) {
+        getChildren().add(new StackElement(element));
+    }
 }

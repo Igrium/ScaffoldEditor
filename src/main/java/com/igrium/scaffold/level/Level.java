@@ -3,15 +3,17 @@ package com.igrium.scaffold.level;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import com.igrium.scaffold.compile.CompileConfig;
 import com.igrium.scaffold.compile.ScaffoldCompiler;
 import com.igrium.scaffold.compile.ScaffoldCompiler.CompileResult;
 import com.igrium.scaffold.core.Project;
-import com.igrium.scaffold.level.attributes.PathAttribute;
+import com.igrium.scaffold.level.element.ElementType;
 import com.igrium.scaffold.level.element.ScaffoldElement;
 import com.igrium.scaffold.level.stack.StackGroup;
+import com.igrium.scaffold.pack.DataPack;
 
 /**
  * A level within a scaffold project. Each level has a set of "objects" which compile into the world.
@@ -21,6 +23,16 @@ public class Level {
     private final Project project;
 
     private final StackGroup levelStack = new StackGroup();
+
+    private String name = "";
+
+    public final String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = Objects.requireNonNull(name, "Level name may not be null.");;
+    }
 
     public Level(Project project) {
         this.project = project;
@@ -81,12 +93,27 @@ public class Level {
         
     }
 
+    public void compileLogic(DataPack dataPack) {
+        for (ScaffoldElement element : levelStack) {
+            try {
+                element.compileLogic(dataPack);
+            } catch (Exception e) {
+                throw new ElementCompileException(element, e);
+            }
+        }
+    }
+
     public CompileResult compile(Path target) {
         CompileConfig compileConfig = new CompileConfig();
-        compileConfig.setOption("target", new PathAttribute(target));
+        compileConfig.setCompileTarget(target);
 
         ScaffoldCompiler compiler = new ScaffoldCompiler(compileConfig, this, getProject());
         compiler.setupCompileSteps();
         return compiler.compile();
+    }
+
+    public <T extends ScaffoldElement> T createElement(ElementType<T> type) {
+        T element = type.create(this);
+        return element;
     }
 }

@@ -2,6 +2,7 @@ package com.igrium.scaffold.test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -9,6 +10,8 @@ import com.igrium.scaffold.compile.ScaffoldCompiler.CompileResult;
 import com.igrium.scaffold.compile.ScaffoldCompiler.CompileStatus;
 import com.igrium.scaffold.core.Project;
 import com.igrium.scaffold.level.Level;
+import com.igrium.scaffold.level.element.DemoElement;
+import com.igrium.scaffold.level.element.ElementType;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -35,19 +38,17 @@ public class TestProjectCommand {
     }
 
     private static int execute(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        File runDirectory = context.getSource().getServer().getRunDirectory();
+            File runDirectory = context.getSource().getServer().getRunDirectory();
         Path projectFolder = runDirectory.toPath().resolve(StringArgumentType.getString(context, "name"));
 
         Project project;
         try {
             project = new Project(projectFolder);
+            Files.createDirectory(projectFolder);
             project.getProjectSettings().getSearchPaths().add(Paths.get("blah"));
             project.getProjectSettings().getSearchPaths().add(Paths.get("/absolute"));
             project.saveProjectSettings();
 
-            for (Path path : project.getSearchPaths()) {
-                context.getSource().sendFeedback(() -> Text.of(path.toString()), false);
-            }
         } catch (IOException e) {
             LogUtils.getLogger().error("An IO exception occurred", e);
             throw ioError.create(e);
@@ -55,6 +56,8 @@ public class TestProjectCommand {
 
         Path compileDir = projectFolder.resolve("compiled");
         Level level = new Level(project);
+        level.getLevelStack().addElement(level.createElement(ElementType.DEMO_ELEMENT));
+        
         CompileResult result = level.compile(compileDir);
         if (result.status() == CompileStatus.COMPLETE) {
             context.getSource().sendFeedback(() -> Text.literal("Compiled to " + compileDir), false);

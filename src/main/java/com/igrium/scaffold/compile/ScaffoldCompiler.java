@@ -7,6 +7,7 @@ import java.util.List;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
+import com.igrium.scaffold.compile.steps.SetupCompileStep;
 import com.igrium.scaffold.core.Project;
 import com.igrium.scaffold.level.Level;
 import com.igrium.scaffold.util.collections.LockableList;
@@ -53,6 +54,8 @@ public class ScaffoldCompiler {
 
     public void setupCompileSteps() {
         CompileRegistrationCallback.EVENT.invoker().register(compileSteps, config);
+        // Setup must always be first.
+        compileSteps.add(0, new SetupCompileStep());
     }
 
     public CompileConfig getConfig() {
@@ -87,13 +90,14 @@ public class ScaffoldCompiler {
 
         isCompiling = true;
         compileSteps.lock();
-        config.lock();
         Logger logger = LogUtils.getLogger();
+
+        CompileContext context = new CompileContext(this);
 
         for (CompileStep compileStep : compileSteps) {
             LogUtils.getLogger().info(compileStep.getDescription());
             try {
-                compileStep.execute(this, config, logger);
+                compileStep.execute(this, context, logger);
             } catch (Exception e) {
                 if (compileStep.isRequired()) {
                     return CompileResult.failed(e);
@@ -106,4 +110,5 @@ public class ScaffoldCompiler {
         isCompiling = false;
         return CompileResult.complete();
     }
+
 }

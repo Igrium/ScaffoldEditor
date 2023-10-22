@@ -17,8 +17,8 @@ public class DataPack extends AbstractPack {
         return functions;
     }
 
-    public DataPack(Project project, String source) {
-        super(project, source);
+    public DataPack(Project project) {
+        super(project, "data");
     }
 
     @Override

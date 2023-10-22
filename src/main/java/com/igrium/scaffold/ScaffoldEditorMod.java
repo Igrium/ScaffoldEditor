@@ -24,6 +24,8 @@ public class ScaffoldEditorMod implements ModInitializer {
         CommandRegistrationCallback.EVENT.register(TestProjectCommand::register);
 
         CompileRegistrationCallback.EVENT.register(Event.DEFAULT_PHASE, ScaffoldCompileSteps::register);
+        CompileRegistrationCallback.EVENT.register(CompileRegistrationCallback.POST_COMPILE_PHASE,
+                ScaffoldCompileSteps::registerPost);
     }
 
 }
