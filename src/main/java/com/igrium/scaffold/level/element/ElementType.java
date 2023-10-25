@@ -18,8 +18,6 @@ public class ElementType<T extends ScaffoldElement> {
         public T create(ElementType<?> type, Level level);
     }
     
-    public static final ElementType<DemoElement> DEMO_ELEMENT = register(new Identifier("scaffold:demo"), new ElementType<>(DemoElement::new));
-
     /**
      * The registry of scaffold element types.
      */

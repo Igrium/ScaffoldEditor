@@ -24,7 +24,7 @@ public abstract class ScaffoldElement extends AttributeHolder implements XMLSeri
     /**
      * A unique ID that's used to identify this element during serialization.
      */
-    private String id = RandomStringUtils.randomAlphanumeric(8);
+    private String id = RandomStringUtils.randomAlphanumeric(8).toLowerCase();
 
     private final ElementType<?> type;
 

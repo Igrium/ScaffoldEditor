@@ -11,7 +11,7 @@ import com.igrium.scaffold.compile.ScaffoldCompiler.CompileStatus;
 import com.igrium.scaffold.core.Project;
 import com.igrium.scaffold.level.Level;
 import com.igrium.scaffold.level.element.DemoElement;
-import com.igrium.scaffold.level.element.ElementType;
+import com.igrium.scaffold.level.element.ElementTypes;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -38,34 +38,40 @@ public class TestProjectCommand {
     }
 
     private static int execute(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-            File runDirectory = context.getSource().getServer().getRunDirectory();
-        Path projectFolder = runDirectory.toPath().resolve(StringArgumentType.getString(context, "name"));
-
-        Project project;
+        File runDirectory = context.getSource().getServer().getRunDirectory();
         try {
-            project = new Project(projectFolder);
-            Files.createDirectory(projectFolder);
-            project.getProjectSettings().getSearchPaths().add(Paths.get("blah"));
-            project.getProjectSettings().getSearchPaths().add(Paths.get("/absolute"));
-            project.saveProjectSettings();
+            Path projectFolder = runDirectory.toPath().resolve(StringArgumentType.getString(context, "name"));
 
-        } catch (IOException e) {
-            LogUtils.getLogger().error("An IO exception occurred", e);
-            throw ioError.create(e);
-        }
+            Project project;
+            try {
+                project = new Project(projectFolder);
+                Files.createDirectories(projectFolder);
+                project.getProjectSettings().getSearchPaths().add(Paths.get("blah"));
+                project.getProjectSettings().getSearchPaths().add(Paths.get("/absolute"));
+                project.saveProjectSettings();
 
-        Path compileDir = projectFolder.resolve("compiled");
-        Level level = new Level(project);
-        level.getLevelStack().addElement(level.createElement(ElementType.DEMO_ELEMENT));
-        
-        CompileResult result = level.compile(compileDir);
-        if (result.status() == CompileStatus.COMPLETE) {
-            context.getSource().sendFeedback(() -> Text.literal("Compiled to " + compileDir), false);
+            } catch (IOException e) {
+                LogUtils.getLogger().error("An IO exception occurred", e);
+                throw ioError.create(e);
+            }
+
+            Path compileDir = projectFolder.resolve("compiled");
+            Level level = new Level(project);
+            DemoElement element = level.createElement(ElementTypes.DEMO_ELEMENT);
+            level.getLevelStack().addElement(element);
+
+            CompileResult result = level.compile(compileDir);
+            if (result.status() == CompileStatus.COMPLETE) {
+                context.getSource().sendFeedback(() -> Text.literal("Compiled to " + compileDir), false);
+                return 1;
+            } else {
+                context.getSource().sendError(Text.literal("Compile failed."));
+                LogUtils.getLogger().error("Compile failed.", result.exception());
+                return 0;
+            }
+        } catch (Throwable e) {
+            LogUtils.getLogger().error("Error executing command", e);
             return 1;
-        } else {
-            context.getSource().sendError(Text.literal("Compile failed."));
-            LogUtils.getLogger().error("Compile failed.", result.exception());
-            return 0;
         }
 
     }

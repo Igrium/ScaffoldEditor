@@ -14,7 +14,7 @@ public class Project {
     public static final String SETTINGS_FILE = "project.json";
 
     private final Path projectFolder;
-    private AssetManager assetManager;
+    private AssetManager assetManager = new AssetManager();
 
     private ProjectSettings projectSettings = new ProjectSettings();
 
